@@ -9,11 +9,15 @@ class AuthorizationBloc extends Bloc<AuthorizationEvent, AuthorizationState> {
       : super(AuthorizationInitial()) {
     on<LoadAuthorization>((event, emit) async {
       emit(AuthorizationLoading());
-      final Authorization = authorizationRepository.login(
-        event.username,
-        event.password,
-      );
-      emit(AuthorizationSuccess());
+      try {
+        final Authorization = await authorizationRepository.login(
+          event.username,
+          event.password,
+        );
+        emit(AuthorizationSuccess());
+      } catch (e) {
+        emit(AuthorizationFailure(error: e));
+      }
     });
   }
 

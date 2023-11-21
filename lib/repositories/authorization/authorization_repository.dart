@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:codium/core/storage/token_storage.dart';
 import 'package:codium/repositories/models/user_data_model.dart';
@@ -21,10 +22,18 @@ class AuthorizationRepository implements AbstractAuthorizationRepository {
       if (response.statusCode == 201) {
         String? data = jsonEncode(UserDataModel.fromJson(response.data));
         TokenStorage.putUserData(data);
-      } else if (response.statusCode != 400) {
-        throw Exception('Failed to get token');
       }
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     } catch (error) {
+      if (error is DioException) {
+        if (error.response?.statusCode == 400) {
+          throw Exception('Неправильный логин или пароль');
+        } else if (error.type == DioExceptionType.connectionError ||
+            error.type == DioExceptionType.connectionTimeout) {
+          throw Exception('Нет подключения к интернету');
+        }
+      }
       throw Exception('Error : $error');
     }
   }

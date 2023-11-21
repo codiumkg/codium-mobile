@@ -9,7 +9,7 @@ class AuthorizationLoading extends AuthorizationState {}
 class AuthorizationSuccess extends AuthorizationState {}
 
 class AuthorizationFailure extends AuthorizationState {
-  final String error;
+  final dynamic error;
 
   AuthorizationFailure({required this.error});
 }

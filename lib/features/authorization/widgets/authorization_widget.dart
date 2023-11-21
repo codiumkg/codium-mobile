@@ -25,6 +25,7 @@ class _AuthorizationFieldState extends State<AuthorizationField> {
   late FocusNode _focusNodeLogin;
   late FocusNode _focusNodePassword;
   bool isPasswordVisible = false;
+  bool isButtonClicked = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -52,10 +53,26 @@ class _AuthorizationFieldState extends State<AuthorizationField> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthorizationBloc, AuthorizationState>(
+        bloc: _AuthorizationBloc,
         listener: (context, state) {
-          // if (state is AuthorizationSuccess) {
-          //   Navigator.of(context).pushReplacementNamed('/home');
-          // }
+          if (state is AuthorizationLoading) {
+            setState(() {
+              isButtonClicked = false;
+            });
+          } else if (state is AuthorizationSuccess) {
+            Navigator.of(context).pushReplacementNamed('/home');
+          } else if (state is AuthorizationFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.error?.message?.toString() ?? ""),
+                backgroundColor: Colors.red,
+              ),
+            );
+            setState(() {
+              isButtonClicked = true;
+              print("Fuck Idi nahui");
+            });
+          }
         },
         child: Form(
             key: _formKey,
@@ -141,25 +158,21 @@ class _AuthorizationFieldState extends State<AuthorizationField> {
                   child: SizedBox(
                       width: double.infinity,
                       child: CustomButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              // _AuthorizationBloc.add(LoadAuthorization(
-                              //     username: _loginController.text,
-                              //     password: _passwordController.text));
-
-                              // ignore: body_might_complete_normally_catch_error
-                              //     .catchError((error) {
-                              //   ScaffoldMessenger.of(context).showSnackBar(
-                              //     const SnackBar(
-                              //       content:
-                              //           Text("Неправильный логин или пароль"),
-                              //       backgroundColor: Colors.red,
-                              //     ),
-                              //   );
-                              // });
-                            }
-                          },
-                          text: "Войти")),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            isButtonClicked
+                                ? _AuthorizationBloc.add(LoadAuthorization(
+                                    username: _loginController.text,
+                                    password: _passwordController.text))
+                                : null;
+                            setState(() {
+                              isButtonClicked = true;
+                            });
+                          }
+                        },
+                        text: "Войти",
+                        isClicked: isButtonClicked,
+                      )),
                 )
               ],
             )));
