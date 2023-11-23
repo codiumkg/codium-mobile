@@ -25,7 +25,7 @@ class _AuthorizationFieldState extends State<AuthorizationField> {
   late FocusNode _focusNodeLogin;
   late FocusNode _focusNodePassword;
   bool isPasswordVisible = false;
-  bool isButtonClicked = true;
+  bool isButtonActive = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -36,7 +36,15 @@ class _AuthorizationFieldState extends State<AuthorizationField> {
     _focusNodeLogin = FocusNode();
     _focusNodePassword = FocusNode();
     _passwordController.addListener(() {
-      setState(() {});
+      setState(() => updateButtonState());
+    });
+    _loginController.addListener(() => updateButtonState());
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonActive = _loginController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty;
     });
   }
 
@@ -57,7 +65,7 @@ class _AuthorizationFieldState extends State<AuthorizationField> {
         listener: (context, state) {
           if (state is AuthorizationLoading) {
             setState(() {
-              isButtonClicked = false;
+              isButtonActive = false;
             });
           } else if (state is AuthorizationSuccess) {
             Navigator.of(context).pushReplacementNamed('/home');
@@ -69,8 +77,7 @@ class _AuthorizationFieldState extends State<AuthorizationField> {
               ),
             );
             setState(() {
-              isButtonClicked = true;
-              print("Fuck Idi nahui");
+              isButtonActive = true;
             });
           }
         },
@@ -158,20 +165,22 @@ class _AuthorizationFieldState extends State<AuthorizationField> {
                   child: SizedBox(
                       width: double.infinity,
                       child: CustomButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            isButtonClicked
-                                ? _AuthorizationBloc.add(LoadAuthorization(
-                                    username: _loginController.text,
-                                    password: _passwordController.text))
-                                : null;
-                            setState(() {
-                              isButtonClicked = true;
-                            });
-                          }
-                        },
+                        onPressed: isButtonActive
+                            ? () {
+                                if (_formKey.currentState!.validate()) {
+                                  _AuthorizationBloc.add(LoadAuthorization(
+                                      username: _loginController.text,
+                                      password: _passwordController.text));
+                                  setState(() {
+                                    isButtonActive = false;
+                                  });
+                                }
+                              }
+                            : null,
                         text: "Войти",
-                        isClicked: isButtonClicked,
+                        isActive: isButtonActive,
+                        controllerLogin: _loginController,
+                        controllerPassword: _passwordController,
                       )),
                 )
               ],

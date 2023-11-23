@@ -10,6 +10,7 @@ class CustomColors {
   static Color accentSecondary = const Color(0xFFa0f538);
   static Color accentColor = const Color(0xffFEE590);
   static Color darkAccentColor = const Color(0xFFF1D090);
+  static Color accentColorDark = const Color(0xffb29175);
 }
 
 class AppFonts {

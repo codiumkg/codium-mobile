@@ -27,7 +27,7 @@ class AuthorizationRepository implements AbstractAuthorizationRepository {
       throw SocketException(e.toString());
     } catch (error) {
       if (error is DioException) {
-        if (error.response?.statusCode == 400) {
+        if (error.response?.statusCode == 401) {
           throw Exception('Неправильный логин или пароль');
         } else if (error.type == DioExceptionType.connectionError ||
             error.type == DioExceptionType.connectionTimeout) {
