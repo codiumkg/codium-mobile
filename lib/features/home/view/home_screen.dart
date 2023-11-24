@@ -147,69 +147,74 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: myProducts.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/topics');
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 15),
-                      decoration: BoxDecoration(
+                  return Material(
+                    color: CustomColors.accentColor,
+                    borderRadius: BorderRadius.circular(23),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/topics');
+                      },
+                      borderRadius: BorderRadius.circular(23),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 15),
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(23),
-                          color: CustomColors.accentColor),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            children: [
-                              Container(
-                                height: 13,
-                                width: progressBarWidth,
-                                decoration: BoxDecoration(
-                                  color: CustomColors.darkAccentColor,
-                                  borderRadius: BorderRadius.circular(23),
-                                ),
-                              ),
-                              Container(
-                                height: 13,
-                                width: (progressBarWidth / 10) * 4,
-                                decoration: BoxDecoration(
-                                  color: CustomColors.accentSecondary,
-                                  borderRadius: BorderRadius.circular(23),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            myProducts[index]["name"],
-                            style: AppFonts.s24W500.copyWith(
-                                color: CustomColors.secondaryTextColor,
-                                fontSize: 16),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            myProducts[index]["totalTasks"] +
-                                "/" +
-                                myProducts[index]["completedTasks"],
-                            style: AppFonts.s13W500
-                                .copyWith(color: CustomColors.placeHolderText),
-                          ),
-                          Align(
-                              alignment: Alignment.bottomRight,
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: CustomColors.darkAccentColor,
-                                child: Text(
-                                  (index + 1).toString(),
-                                  style: AppFonts.s20W500.copyWith(
-                                    color: CustomColors.secondaryTextColor,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  height: 13,
+                                  width: progressBarWidth,
+                                  decoration: BoxDecoration(
+                                    color: CustomColors.darkAccentColor,
+                                    borderRadius: BorderRadius.circular(23),
                                   ),
                                 ),
-                              )),
-                        ],
+                                Container(
+                                  height: 13,
+                                  width: (progressBarWidth / 10) * 4,
+                                  decoration: BoxDecoration(
+                                    color: CustomColors.accentSecondary,
+                                    borderRadius: BorderRadius.circular(23),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              myProducts[index]["name"],
+                              style: AppFonts.s24W500.copyWith(
+                                  color: CustomColors.secondaryTextColor,
+                                  fontSize: 16),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              myProducts[index]["totalTasks"] +
+                                  "/" +
+                                  myProducts[index]["completedTasks"],
+                              style: AppFonts.s13W500.copyWith(
+                                  color: CustomColors.placeHolderText),
+                            ),
+                            Align(
+                                alignment: Alignment.bottomRight,
+                                child: CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: CustomColors.darkAccentColor,
+                                  child: Text(
+                                    (index + 1).toString(),
+                                    style: AppFonts.s20W500.copyWith(
+                                      color: CustomColors.secondaryTextColor,
+                                    ),
+                                  ),
+                                )),
+                          ],
+                        ),
                       ),
                     ),
                   );
