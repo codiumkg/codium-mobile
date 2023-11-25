@@ -16,6 +16,7 @@ class CustomColors {
 class AppFonts {
   static TextStyle s48W400 =
       const TextStyle(fontSize: 48, fontWeight: FontWeight.w400);
+
   static TextStyle s20W500 =
       const TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
   static TextStyle s24W500 =

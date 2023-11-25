@@ -1,9 +1,12 @@
 import 'package:codium/core/constants/style.dart';
 import 'package:codium/core/storage/token_storage.dart';
-import 'package:codium/features/authorization/widgets/custom_text.dart';
+import 'package:codium/features/home/bloc/home_bloc.dart';
+import 'package:codium/repositories/home/abstract_home_repository.dart';
 import 'package:codium/repositories/models/user_data_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +16,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _HomeBloc = HomeBloc(
+    GetIt.I<AbstractGroupRepository>(),
+  );
+
+  @override
+  void initState() {
+    _HomeBloc.add(LoadHome());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double progressBarWidth = (MediaQuery.of(context).size.width / 2) - 72;
@@ -37,193 +50,226 @@ class _HomeScreenState extends State<HomeScreen> {
         iconTheme: IconThemeData(color: CustomColors.primaryTextColor),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
+      body: BlocBuilder<HomeBloc, HomeState>(
+          bloc: _HomeBloc,
+          builder: (context, state) {
+            if (state is HomeLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is HomeSuccess) {
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
                     children: [
-                      Text(
-                        "Python",
-                        style: AppFonts.s48W400
-                            .copyWith(color: CustomColors.primaryTextColor),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 35, vertical: 5),
-                        decoration: BoxDecoration(
-                            color: CustomColors.accentSecondary,
-                            borderRadius: BorderRadius.circular(24)),
-                        child: Center(
-                          child: Text(
-                            "Группа - 2",
-                            style: AppFonts.s20W500
-                                .copyWith(color: CustomColors.primaryColor),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: 135,
-                        height: 135,
-                        child: PieChart(
-                          PieChartData(
-                            startDegreeOffset: 270,
-                            sectionsSpace: 0,
-                            sections: [
-                              PieChartSectionData(
-                                value: 50,
-                                showTitle: false,
-                                color: CustomColors.accentColor,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.sizeOf(context).width / 2.29,
+                                child: Text(
+                                  state.group?.subject?.title ?? "",
+                                  style: AppFonts.s48W400.copyWith(
+                                    color: CustomColors.primaryTextColor,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ),
-                              PieChartSectionData(
-                                value: 50,
-                                showTitle: false,
-                                color: CustomColors.accentSecondary,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 35, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: CustomColors.accentSecondary,
+                                    borderRadius: BorderRadius.circular(24)),
+                                child: Center(
+                                  child: Text(
+                                    state.group?.title.toString() ?? "",
+                                    style: AppFonts.s20W500.copyWith(
+                                        color: CustomColors.primaryColor),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
                               )
                             ],
                           ),
-                        ),
-                      ),
-                      Container(
-                        width: 120,
-                        height: 120,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: CustomColors.primaryColor,
-                          borderRadius: BorderRadius.circular(66),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '50',
-                                  style: AppFonts.s48W400.copyWith(
-                                    color: CustomColors.primaryTextColor,
-                                    height: 0,
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              SizedBox(
+                                width: 135,
+                                height: 135,
+                                child: PieChart(
+                                  PieChartData(
+                                    startDegreeOffset: 270,
+                                    sectionsSpace: 0,
+                                    sections: [
+                                      PieChartSectionData(
+                                        value: 50,
+                                        showTitle: false,
+                                        color: CustomColors.accentColor,
+                                      ),
+                                      PieChartSectionData(
+                                        value: 50,
+                                        showTitle: false,
+                                        color: CustomColors.accentSecondary,
+                                      )
+                                    ],
                                   ),
                                 ),
-                                Text("%",
-                                    style: AppFonts.s24W500.copyWith(
-                                        color: CustomColors.primaryTextColor))
-                              ],
-                            ),
-                            Text(
-                              "Выполнено",
-                              style: AppFonts.s13W500.copyWith(
-                                  color: CustomColors.primaryTextColor),
-                            )
-                          ],
+                              ),
+                              Container(
+                                width: 120,
+                                height: 120,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: CustomColors.primaryColor,
+                                  borderRadius: BorderRadius.circular(66),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '50',
+                                          style: AppFonts.s48W400.copyWith(
+                                            color:
+                                                CustomColors.primaryTextColor,
+                                            height: 0,
+                                          ),
+                                        ),
+                                        Text("%",
+                                            style: AppFonts.s24W500.copyWith(
+                                                color: CustomColors
+                                                    .primaryTextColor))
+                                      ],
+                                    ),
+                                    Text(
+                                      "Выполнено",
+                                      style: AppFonts.s13W500.copyWith(
+                                          color: CustomColors.primaryTextColor),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 42),
+                      GridView.builder(
+                        padding: EdgeInsets.zero,
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 300,
+                          childAspectRatio: 1,
+                          crossAxisSpacing: 24,
+                          mainAxisSpacing: 24,
                         ),
+                        shrinkWrap: true,
+                        itemCount: state.sections?.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Material(
+                            color: CustomColors.accentColor,
+                            borderRadius: BorderRadius.circular(23),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pushNamed('/topics');
+                              },
+                              borderRadius: BorderRadius.circular(23),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(23),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          height: 13,
+                                          width: progressBarWidth,
+                                          decoration: BoxDecoration(
+                                            color: CustomColors.darkAccentColor,
+                                            borderRadius:
+                                                BorderRadius.circular(23),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 13,
+                                          width: (progressBarWidth / 10) * 4,
+                                          decoration: BoxDecoration(
+                                            color: CustomColors.accentSecondary,
+                                            borderRadius:
+                                                BorderRadius.circular(23),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      state.sections?[index].title ?? '',
+                                      style: AppFonts.s24W500.copyWith(
+                                          color:
+                                              CustomColors.secondaryTextColor,
+                                          fontSize: 16),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      "1/4",
+                                      style: AppFonts.s13W500.copyWith(
+                                          color: CustomColors.placeHolderText),
+                                    ),
+                                    Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor:
+                                              CustomColors.darkAccentColor,
+                                          child: Text(
+                                            (index + 1).toString(),
+                                            style: AppFonts.s20W500.copyWith(
+                                              color: CustomColors
+                                                  .secondaryTextColor,
+                                            ),
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       )
                     ],
-                  )
-                ],
-              ),
-              const SizedBox(height: 42),
-              GridView.builder(
-                padding: EdgeInsets.zero,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 300,
-                  childAspectRatio: 1,
-                  crossAxisSpacing: 24,
-                  mainAxisSpacing: 24,
+                  ),
                 ),
-                shrinkWrap: true,
-                itemCount: myProducts.length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Material(
-                    color: CustomColors.accentColor,
-                    borderRadius: BorderRadius.circular(23),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed('/topics');
-                      },
-                      borderRadius: BorderRadius.circular(23),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(23),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  height: 13,
-                                  width: progressBarWidth,
-                                  decoration: BoxDecoration(
-                                    color: CustomColors.darkAccentColor,
-                                    borderRadius: BorderRadius.circular(23),
-                                  ),
-                                ),
-                                Container(
-                                  height: 13,
-                                  width: (progressBarWidth / 10) * 4,
-                                  decoration: BoxDecoration(
-                                    color: CustomColors.accentSecondary,
-                                    borderRadius: BorderRadius.circular(23),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              myProducts[index]["name"],
-                              style: AppFonts.s24W500.copyWith(
-                                  color: CustomColors.secondaryTextColor,
-                                  fontSize: 16),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              myProducts[index]["totalTasks"] +
-                                  "/" +
-                                  myProducts[index]["completedTasks"],
-                              style: AppFonts.s13W500.copyWith(
-                                  color: CustomColors.placeHolderText),
-                            ),
-                            Align(
-                                alignment: Alignment.bottomRight,
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: CustomColors.darkAccentColor,
-                                  child: Text(
-                                    (index + 1).toString(),
-                                    style: AppFonts.s20W500.copyWith(
-                                      color: CustomColors.secondaryTextColor,
-                                    ),
-                                  ),
-                                )),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              )
-            ],
-          ),
-        ),
-      ),
+              );
+            } else if (state is HomeFailure) {
+              return Text(
+                "error ${state.error}",
+                style: TextStyle(color: Colors.white),
+              );
+            } else {
+              return const Text(
+                "sdfsdf",
+                style: TextStyle(color: Colors.white),
+              );
+            }
+          }),
       drawer: FutureBuilder<UserDataModel?>(
           future: TokenStorage.getUserData(),
           builder: (context, snapshot) {

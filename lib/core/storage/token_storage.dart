@@ -27,7 +27,6 @@ class TokenStorage {
   static Future<UserDataModel?> getUserData() async {
     var res =
         await _storage.read(key: kUserDataKey, aOptions: _getAndroidOptions());
-    print('FUCK $res');
 
     if (res != null) {
       Map<String, dynamic> userDataMap =

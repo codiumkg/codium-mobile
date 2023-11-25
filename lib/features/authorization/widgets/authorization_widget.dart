@@ -16,6 +16,7 @@ class AuthorizationField extends StatefulWidget {
 }
 
 class _AuthorizationFieldState extends State<AuthorizationField> {
+  // ignore: non_constant_identifier_names
   final _AuthorizationBloc = AuthorizationBloc(
     GetIt.I<AbstractAuthorizationRepository>(),
   );
