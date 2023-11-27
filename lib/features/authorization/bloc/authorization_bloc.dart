@@ -10,7 +10,7 @@ class AuthorizationBloc extends Bloc<AuthorizationEvent, AuthorizationState> {
     on<LoadAuthorization>((event, emit) async {
       emit(AuthorizationLoading());
       try {
-        final Authorization = await authorizationRepository.login(
+        await authorizationRepository.login(
           event.username,
           event.password,
         );

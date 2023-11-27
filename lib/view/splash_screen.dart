@@ -1,8 +1,6 @@
 import 'package:codium/core/storage/token_storage.dart';
 import 'package:codium/repositories/authorization/authorization.dart';
-import 'package:codium/repositories/authorization/authorization_repository.dart';
 import 'package:codium/repositories/models/user_data_model.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 

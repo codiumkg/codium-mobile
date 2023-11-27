@@ -7,13 +7,13 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc(this.groupRepository) : super(HomeInitial()) {
+  HomeBloc(this.homeRepository) : super(HomeInitial()) {
     on<HomeEvent>((event, emit) async {
       if (event is LoadHome) {
         try {
           emit(HomeLoading());
-          final group = await groupRepository.group();
-          final sections = await groupRepository.section();
+          final group = await homeRepository.group();
+          final sections = await homeRepository.section();
           emit(HomeSuccess(group: group, sections: sections));
         } catch (e) {
           emit(HomeFailure(error: e));
@@ -22,5 +22,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
   }
 
-  final AbstractGroupRepository groupRepository;
+  final AbstractHomeRepository homeRepository;
 }

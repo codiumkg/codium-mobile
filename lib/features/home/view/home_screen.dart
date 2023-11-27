@@ -1,5 +1,6 @@
 import 'package:codium/core/constants/style.dart';
 import 'package:codium/core/storage/token_storage.dart';
+import 'package:codium/core/widgets/skeleton.dart';
 import 'package:codium/features/home/bloc/home_bloc.dart';
 import 'package:codium/repositories/home/abstract_home_repository.dart';
 import 'package:codium/repositories/models/user_data_model.dart';
@@ -7,6 +8,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,8 +18,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // ignore: non_constant_identifier_names
   final _HomeBloc = HomeBloc(
-    GetIt.I<AbstractGroupRepository>(),
+    GetIt.I<AbstractHomeRepository>(),
   );
 
   @override
@@ -29,15 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double progressBarWidth = (MediaQuery.of(context).size.width / 2) - 72;
-    final List<Map> myProducts = List.generate(
-        10,
-        (index) => {
-              "id": index,
-              "name": "Типы данных и условные операторы",
-              "totalTasks": "4",
-              "completedTasks": "1"
-            }).toList();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -54,7 +48,198 @@ class _HomeScreenState extends State<HomeScreen> {
           bloc: _HomeBloc,
           builder: (context, state) {
             if (state is HomeLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Shimmer.fromColors(
+                baseColor: CustomColors.darkAccentColor.withOpacity(0.04),
+                highlightColor: CustomColors.placeHolderText,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width / 2.29,
+                                    child: const Skeleton(
+                                      height: 40,
+                                      width: 100,
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  width: 100,
+                                  height: 30,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 35, vertical: 5),
+                                  decoration: BoxDecoration(
+                                      color: CustomColors.darkAccentColor
+                                          .withOpacity(0.04),
+                                      borderRadius: BorderRadius.circular(24)),
+                                )
+                              ],
+                            ),
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 135,
+                                  height: 135,
+                                  child: PieChart(
+                                    PieChartData(
+                                      startDegreeOffset: 270,
+                                      sectionsSpace: 0,
+                                      sections: [
+                                        PieChartSectionData(
+                                          value: 50,
+                                          showTitle: false,
+                                          color: CustomColors.darkAccentColor
+                                              .withOpacity(0.04),
+                                        ),
+                                        PieChartSectionData(
+                                          value: 50,
+                                          showTitle: false,
+                                          color: CustomColors.darkAccentColor
+                                              .withOpacity(0.04),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: 120,
+                                  height: 120,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: CustomColors.primaryColor,
+                                    borderRadius: BorderRadius.circular(66),
+                                  ),
+                                  child: const Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Skeleton(
+                                            height: 50,
+                                            width: 55,
+                                          ),
+                                          Skeleton(
+                                            height: 25,
+                                            width: 20,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Skeleton(
+                                        height: 20,
+                                        width: 80,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 42),
+                        GridView.builder(
+                          padding: EdgeInsets.zero,
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 300,
+                            childAspectRatio: 1,
+                            crossAxisSpacing: 24,
+                            mainAxisSpacing: 24,
+                          ),
+                          shrinkWrap: true,
+                          itemCount: 6,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Material(
+                              color: CustomColors.darkAccentColor
+                                  .withOpacity(0.04),
+                              borderRadius: BorderRadius.circular(23),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(23),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 15),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(23),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Container(
+                                            height: 13,
+                                            width: progressBarWidth,
+                                            decoration: BoxDecoration(
+                                              color: CustomColors
+                                                  .darkAccentColor
+                                                  .withOpacity(0.04),
+                                              borderRadius:
+                                                  BorderRadius.circular(23),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 13,
+                                            width: (progressBarWidth / 10) * 4,
+                                            decoration: BoxDecoration(
+                                              color: CustomColors
+                                                  .darkAccentColor
+                                                  .withOpacity(0.04),
+                                              borderRadius:
+                                                  BorderRadius.circular(23),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Skeleton(
+                                        width: 100,
+                                        height: 10,
+                                      ),
+                                      const Skeleton(
+                                        width: 30,
+                                        height: 10,
+                                      ),
+                                      Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: CustomColors
+                                                .darkAccentColor
+                                                .withOpacity(0.04),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
             } else if (state is HomeSuccess) {
               return SingleChildScrollView(
                 child: Padding(
@@ -182,7 +367,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(23),
                             child: InkWell(
                               onTap: () {
-                                Navigator.of(context).pushNamed('/topics');
+                                Navigator.pushNamed(context, '/topics',
+                                    arguments: {
+                                      'sectionId': state.sections?[index].id,
+                                      'sectionTitle':
+                                          state.sections?[index].title
+                                    });
                               },
                               borderRadius: BorderRadius.circular(23),
                               child: Container(
@@ -261,12 +451,14 @@ class _HomeScreenState extends State<HomeScreen> {
             } else if (state is HomeFailure) {
               return Text(
                 "error ${state.error}",
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               );
             } else {
-              return const Text(
-                "sdfsdf",
-                style: TextStyle(color: Colors.white),
+              return const Center(
+                child: Text(
+                  "Ой, произошла ошибка",
+                  style: TextStyle(color: Colors.white),
+                ),
               );
             }
           }),

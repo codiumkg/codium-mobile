@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:codium/core/storage/token_storage.dart';
@@ -8,7 +7,7 @@ import 'package:dio/dio.dart';
 
 import 'home.dart';
 
-class HomeRepository implements AbstractGroupRepository {
+class HomeRepository implements AbstractHomeRepository {
   HomeRepository({required this.dio});
 
   final Dio dio;
@@ -39,6 +38,7 @@ class HomeRepository implements AbstractGroupRepository {
       }
       throw Exception('Error : $error');
     }
+    return null;
   }
 
   @override
@@ -69,5 +69,6 @@ class HomeRepository implements AbstractGroupRepository {
       }
       throw Exception('Error : $error');
     }
+    return null;
   }
 }
