@@ -2,6 +2,8 @@ import 'package:codium/codium_app.dart';
 import 'package:codium/core/storage/token_storage.dart';
 import 'package:codium/repositories/home/abstract_home_repository.dart';
 import 'package:codium/repositories/home/home_repository.dart';
+import 'package:codium/repositories/topic_details/abstract_topic_details_repository.dart';
+import 'package:codium/repositories/topic_details/topic_details_repository.dart';
 import 'package:codium/repositories/topics/abstract_topics_repository.dart';
 import 'package:codium/repositories/topics/topics_repository.dart';
 import 'package:dio/dio.dart';
@@ -20,7 +22,9 @@ void main() {
   GetIt.I.registerLazySingleton<AbstractTopicsRepository>(
     () => TopicsRepository(dio: Dio()),
   );
-
+  GetIt.I.registerLazySingleton<AbstractTopicDetailsRepository>(
+    () => TopicDetailsRepository(dio: Dio()),
+  );
   WidgetsFlutterBinding.ensureInitialized();
   TokenStorage.init();
   runApp(const CodiumApp());
