@@ -292,12 +292,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     sectionsSpace: 0,
                                     sections: [
                                       PieChartSectionData(
-                                        value: ((state.mainProgress?.percent ??
-                                                    0) -
-                                                100)
+                                        value: (100 -
+                                                (state.mainProgress?.percent ??
+                                                    0))
                                             .toDouble(),
                                         showTitle: false,
-                                        color: CustomColors.accentColor,
+                                        color: CustomColors.secondaryColor,
                                       ),
                                       PieChartSectionData(
                                         value: state.mainProgress?.percent
@@ -329,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         Text(
                                           '${state.mainProgress?.percent ?? 0}',
-                                          style: AppFonts.s48W400.copyWith(
+                                          style: AppFonts.s24W500.copyWith(
                                             color:
                                                 CustomColors.primaryTextColor,
                                             height: 0,
@@ -404,7 +404,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         Container(
                                           height: 13,
-                                          width: (progressBarWidth / 10) *
+                                          width: (progressBarWidth /
+                                                  (state
+                                                          .sections?[index]
+                                                          .progress
+                                                          ?.toComplete ??
+                                                      0)) *
                                               (state.sections?[index].progress
                                                       ?.completed ??
                                                   0),
