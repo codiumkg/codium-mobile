@@ -292,12 +292,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     sectionsSpace: 0,
                                     sections: [
                                       PieChartSectionData(
-                                        value: 50,
+                                        value: ((state.mainProgress?.percent ??
+                                                    0) -
+                                                100)
+                                            .toDouble(),
                                         showTitle: false,
                                         color: CustomColors.accentColor,
                                       ),
                                       PieChartSectionData(
-                                        value: 50,
+                                        value: state.mainProgress?.percent
+                                                ?.toDouble() ??
+                                            0,
                                         showTitle: false,
                                         color: CustomColors.accentSecondary,
                                       )
@@ -323,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '50',
+                                          '${state.mainProgress?.percent ?? 0}',
                                           style: AppFonts.s48W400.copyWith(
                                             color:
                                                 CustomColors.primaryTextColor,
@@ -399,7 +404,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         Container(
                                           height: 13,
-                                          width: (progressBarWidth / 10) * 4,
+                                          width: (progressBarWidth / 10) *
+                                              (state.sections?[index].progress
+                                                      ?.completed ??
+                                                  0),
                                           decoration: BoxDecoration(
                                             color: CustomColors.accentSecondary,
                                             borderRadius:
@@ -419,7 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
-                                      "1/4",
+                                      "${state.sections?[index].progress?.toComplete} / ${state.sections?[index].progress?.completed}",
                                       style: AppFonts.s13W500.copyWith(
                                           color: CustomColors.placeHolderText),
                                     ),

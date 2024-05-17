@@ -1,12 +1,16 @@
 class Progress {
-  final int? percent;
+  final int? toComplete;
+  final int? completed;
 
-  Progress({this.percent});
+  Progress({required this.toComplete, required this.completed});
 
-  Progress.fromJson(Map<String, dynamic> json)
-      : percent = json['percent'] as int?;
+  factory Progress.fromJson(Map<String, dynamic> json) => Progress(
+        toComplete: json['toComplete'] as int?,
+        completed: json['completed'] as int?,
+      );
 
   Map<String, dynamic> toJson() => {
-        'percent': percent,
+        'toComplete': toComplete,
+        'completed': completed,
       };
 }

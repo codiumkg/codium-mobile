@@ -1,5 +1,7 @@
 import 'package:codium/repositories/home/abstract_home_repository.dart';
+import 'package:codium/repositories/home/home.dart';
 import 'package:codium/repositories/models/group_data_model.dart';
+import 'package:codium/repositories/models/main_progress_data_model.dart';
 import 'package:codium/repositories/models/section_data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +16,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(HomeLoading());
           final group = await homeRepository.group();
           final sections = await homeRepository.section();
-          emit(HomeSuccess(group: group, sections: sections));
+          final mainProgress = await homeRepository.mainProgress();
+          emit(HomeSuccess(
+              group: group, sections: sections, mainProgress: mainProgress));
         } catch (e) {
           emit(HomeFailure(error: e));
         }

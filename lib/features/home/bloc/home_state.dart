@@ -9,8 +9,12 @@ class HomeLoading extends HomeState {}
 class HomeSuccess extends HomeState {
   final Group? group;
   final List<Section>? sections;
+  final MainProgress? mainProgress;
 
-  HomeSuccess({required this.group, required this.sections});
+  HomeSuccess(
+      {required this.group,
+      required this.sections,
+      required this.mainProgress});
 }
 
 class HomeFailure extends HomeState {
