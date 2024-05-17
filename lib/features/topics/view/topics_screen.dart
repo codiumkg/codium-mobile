@@ -129,7 +129,10 @@ class _TopicsScreenState extends State<TopicsScreen> {
                             color: CustomColors.accentColor,
                             borderRadius: BorderRadius.circular(13),
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context).pushNamed('/topicDetails',
+                                    arguments: [i, state.topics?[i].title]);
+                              },
                               borderRadius: BorderRadius.circular(13),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(

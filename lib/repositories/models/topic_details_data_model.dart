@@ -1,15 +1,8 @@
 import 'package:codium/repositories/models/topic_data_model.dart';
 
-enum Type {
-  // ignore: constant_identifier_names
-  LECTURE,
-  // ignore: constant_identifier_names
-  TASK
-}
-
 class TopicDetails {
   final int? id;
-  final Type? type;
+  final String? type;
   final int? orderNumber;
   final int? taskId;
   final int? lectureId;
@@ -23,14 +16,15 @@ class TopicDetails {
 
   TopicDetails.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
-        type = json['type'] as Type?,
+        type = json['type'] as String?,
         orderNumber = json['orderNumber'] as int?,
         taskId = json['taskId'] as int?,
         lectureId = json['lectureId'] as int?,
         topicId = json['topicId'] as int?,
-        topic = Topic.fromJson(json['topic']),
-        lecture = Lecture.fromJson(json['lecture']),
-        task = Task.fromJson(json['task']);
+        topic = json['topic'] != null ? Topic.fromJson(json['topic']) : null,
+        lecture =
+            json['lecture'] != null ? Lecture.fromJson(json['lecture']) : null,
+        task = json['task'] != null ? Task.fromJson(json['task']) : null;
 
   Map<String, dynamic> toJson() => {
         'id': id,

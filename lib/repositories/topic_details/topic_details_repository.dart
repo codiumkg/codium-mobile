@@ -23,7 +23,7 @@ class TopicDetailsRepository implements AbstractTopicDetailsRepository {
       if (response.statusCode == 200) {
         List<TopicDetails> topics =
             List<TopicDetails>.from(response.data.map((e) {
-          return Topic.fromJson(e);
+          return TopicDetails.fromJson(e);
         }).toList());
         return topics;
       }
